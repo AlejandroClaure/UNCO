@@ -152,3 +152,4 @@ if($cambio== "NO"){
 }else{
     echo "por favor, vuelva a intentarlo";
 }
+?>

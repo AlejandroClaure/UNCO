@@ -175,3 +175,4 @@ class Viaje
             "la cantidad máxima de personas del viaje es de: " . $this->getCantidadMax() . "\n";
     }
 }
+?>
