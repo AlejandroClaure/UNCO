@@ -1,25 +1,16 @@
 <?php
 
-/**La empresa de Transporte de Pasajeros “Viaje Feliz” quiere registrar la información referente a sus viajes. 
- * De cada viaje se precisa almacenar el código del mismo, destino, cantidad máxima de pasajeros y los pasajeros del viaje.
-
- Realice la implementación de la clase Viaje e implemente los métodos necesarios para modificar los atributos de dicha clase (
- incluso los datos de los pasajeros). Utilice un array que almacene la información correspondiente a los pasajeros. 
- Cada pasajero es un array asociativo con las claves “nombre”, “apellido” y “numero de documento”.
- 
- Implementar un script testViaje.php que cree una instancia de la clase Viaje y presente un menú que permita 
- cargar la información del viaje, modificar y ver sus datos. */
-
 class Viaje
 {
     private $codigo;
     private $destino;
     private $cantidadMax;
-    private $pasajeros = array();
+    private $pasajero;
+    private $responsable;
 
     public function __construct($codigo, $destino, $cantidadMax)
     {
-        //los pasajeros se incluirán mediante el método agregarPasajero
+        $this->pasajero = [];
         $this->codigo = $codigo;
         $this->destino = $destino;
         $this->cantidadMax = $cantidadMax;
@@ -40,7 +31,11 @@ class Viaje
     }
     public function getPasajeros()
     {
-        return $this->pasajeros;
+        return $this->pasajero;
+    }
+    public function getResponsable()
+    {
+        return $this->responsable;
     }
 
     //metodos de acceso set
@@ -59,42 +54,17 @@ class Viaje
 
     public function setPasajeros($pasajeros)
     {
-        $this->pasajeros = $pasajeros;
+        $this->pasajero = $pasajeros;
     }
 
-
-    /**
-     * estos métodos son los mismos que los setters(cambiarCodigo, cambiarDestino, cambiarCantMax), pero se crearon
-     * para cumplir con el enunciado
-     */
-
-    /**
-     * metodo que cambia el código del viaje
-     */
-    public function cambiarCodigo($nuevoCodigo)
+    public function setResponsable($responsable)
     {
-        $this->setCodigo($nuevoCodigo);
+        $this->responsable=$responsable;
     }
-
-    /**
-     * metodo que cambia el destino del viaje
-     */
-    public function cambiarDestino($destino)
-    {
-        $this->setDestino($destino);
-    }
-
-    /**
-    * metodo que cambia la cantidad máxima de pasajeros
-    * @param int $cantidadMax
-    */    
-    public function cambiarCantMax($cantidadMax)
-     {
-         $this->setCantidadMax($cantidadMax);
-     }
 
     /**
      * Método que verifica un número para saber si corresponde al indice dentro del array de pasajeros
+     * (este método ya no se usa en la última versión)
      * @param int $num
      * @return boolean $valido
      */
@@ -115,7 +85,7 @@ class Viaje
     public function verificarDni($dni){   
         $valido= false;
         foreach($this->getPasajeros() as $key => $pasajero) {
-            if ($pasajero["documento"] == $dni) {
+            if ($pasajero->getNroDoc() == $dni) {
                 $valido = true;
                 break;
             } else {
@@ -126,33 +96,46 @@ class Viaje
     }
 
     /**
-     * Método para modificar un pasajero
-     * @param int $num
-     * @param string $cambio, $key
-     */
-    public function modificarPasajero($num, $cambio, $key)
-    {
-        $arrayPasajeros= $this->getPasajeros();
-        $arrayPasajeros[$num][$key]=$cambio;
-        $this->setPasajeros($arrayPasajeros);
-    }
-
-    /**
      * Método para agregar a pasajero
      * @param array $pasajero
      * @return boolean $validacion
      */
     public function agregarPasajeros($pasajero) {
-        if (count($this->getPasajeros()) <= $this->getCantidadMax()) {
             $arrayPasajeros = $this->getPasajeros();
             array_push($arrayPasajeros, $pasajero);
             $this->setPasajeros($arrayPasajeros);
-            $validacion = true;
-        } else {
-            $validacion = false;
-        }
-        return $validacion;
     }
+
+    /**
+     * Método para agregar responsable
+     * @param int $nro
+     * @param string $nuevo
+     */
+    public function cambiarDatosResponsable($nro, $nuevo) {
+        $responsable=$this->getResponsable();
+        switch($nro){
+            case "1":
+                $responsable->setNombreResponsable($nuevo);
+                $this->setResponsable($responsable);
+             break;
+             
+             case "2":
+                $responsable->setApellidoResponsable($nuevo);
+                $this->setResponsable($responsable);
+             break;
+             
+             case "3":
+                $responsable->setNroEmpleado($nuevo);
+                $this->setResponsable($responsable);
+             break;
+             
+             case "4":
+                $responsable->setNroLicencia($nuevo);
+                $this->setResponsable($responsable);
+             break;
+        }
+ 
+     }
 
     /**
      * Método para eliminar un pasajero
@@ -167,12 +150,85 @@ class Viaje
         }
     }
 
+    /**
+     * Metodo para cambiar el nombre de un pasajero
+     * @param string $dni, $nombre
+     */
+    public function cambiarNombrePasajero($dni, $nombre){
+        foreach($this->getPasajeros() as $key=>$pasajero){
+            if($pasajero[$dni]== $dni){
+                $pasajero->setNombre($nombre);
+                break;
+            }
+        }
+    }
+        /**
+     * Metodo para cambiar el nombre de un pasajero
+     * @param string $dni, $apellido
+     */
+    public function cambiarApellidoPasajero($dni, $apellido){
+        foreach($this->getPasajeros() as $key=>$pasajero){
+            if($pasajero[$dni]== $dni){
+                $pasajero->setApellido($apellido);
+                break;
+            }
+        }
+    }    
+    
+    /**
+    * Metodo para cambiar el documento de un pasajero
+    * @param string $dni, $dniNuevo
+    */
+   public function cambiarDocumentoPasajero($dni, $dniNuevo){
+       foreach($this->getPasajeros() as $key=>$pasajero){
+           if($pasajero[$dni]== $dni){
+               $pasajero->setNroDoc($dniNuevo);
+               break;
+           }
+       }
+   }
+
+   /**
+    * Metodo para cambiar el telefono de un pasajero
+    * @param string $dni, $dniNuevo
+    */
+    public function cambiarTelefonoPasajero($dni, $telefono){
+        foreach($this->getPasajeros() as $key=>$pasajero){
+            if($pasajero[$dni]== $dni){
+                $pasajero->setTelefono($telefono);
+                break;
+            }
+        }
+    }
+
+    /**
+     * funcion para devolver el string concatenado de pasajeros
+     */
+    public function stringPasajero(){
+        $col= " \n \n *************** \n ";
+        foreach($this->getPasajeros() as $key=>$pasajero){
+            $col.= $pasajero;
+        }
+        return $col;
+    }
+    /**
+     * funcion para devolver el string concatenado del responsable
+     */
+    public function stringResponsable(){
+        $col= " ";
+        $col.= $this->getResponsable();
+        return $col;
+
+    }
     
     public function __toString()
     {
         return "el código del viaje es: " . $this->getCodigo() . "\n" .
             "el destino del viaje es: " . $this->getDestino() . "\n" .
-            "la cantidad máxima de personas del viaje es de: " . $this->getCantidadMax() . "\n";
+            "la cantidad máxima de personas del viaje es de: " . $this->getCantidadMax() . "\n".
+            "los pasajeros son: ".$this->stringPasajero(). "\n".
+            $this->stringResponsable();
+
     }
 }
 ?>
