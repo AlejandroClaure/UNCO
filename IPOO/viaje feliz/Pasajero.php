@@ -1,5 +1,5 @@
 <?php
-class Pasajero{
+class Pasajero extends Viaje{
     private $nombre;
     private $apellido;
     private $nroDoc;

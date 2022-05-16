@@ -7,13 +7,20 @@ class Viaje
     private $cantidadMax;
     private $pasajero;
     private $responsable;
+    private $importe;
+    private $viajeIda;
+    private $viajeVuelta;
 
-    public function __construct($codigo, $destino, $cantidadMax)
+
+    public function __construct($codigo, $destino, $cantidadMax, $importe, $viajeIda, $viajeVuelta)
     {
         $this->pasajero = [];
         $this->codigo = $codigo;
         $this->destino = $destino;
         $this->cantidadMax = $cantidadMax;
+        $this->importe = $importe;
+        $this->viajeIda = $viajeIda;
+        $this->viajeVuelta = $viajeVuelta;
     }
 
     //metodos de acceso get
@@ -36,6 +43,18 @@ class Viaje
     public function getResponsable()
     {
         return $this->responsable;
+    }
+    public function getImporte()
+    {
+        return $this->importe;
+    }
+    public function getViajeIda()
+    {
+        return $this->viajeIda;
+    }
+    public function getViajeVuelta()
+    {
+        return $this->viajeVuelta;
     }
 
     //metodos de acceso set
@@ -60,6 +79,18 @@ class Viaje
     public function setResponsable($responsable)
     {
         $this->responsable=$responsable;
+    }
+    public function setImporte($importe)
+    {
+        $this->importe=$importe;
+    }
+    public function setViajeIda($viajeIda)
+    {
+        $this->viajeIda=$viajeIda;
+    }
+    public function setViajeVuelta($viajeVuelta)
+    {
+        $this->viajeVuelta=$viajeVuelta;
     }
 
     /**
@@ -201,6 +232,8 @@ class Viaje
         }
     }
 
+
+
     /**
      * funcion para devolver el string concatenado de pasajeros
      */
@@ -210,6 +243,36 @@ class Viaje
             $col.= $pasajero;
         }
         return $col;
+    }
+
+    /**
+     * Funcion que verifica si hay pasaje disponible
+     * retorna verdadero si la cantidad de pasajeros del viaje es menor a la cantidad máxima de pasajeros y falso caso contrario.
+     * @return boolean $seVende
+     */
+    public function hayPasajesDisponible(){
+        $seVende= false;
+        if(count($this->getPasajeros())<= $this->getCantidadMax()){
+            $seVende= true;
+        }
+        return $seVende;
+    }
+    /**
+     * Función que vende un pasaje, recibe por parametro un pasajero
+     * @param obj $pasajero
+     * @return int $importe
+     */
+    public function venderPasaje($pasajero){
+            if ($this->getViajeIda() == "si" && $this->getViajeVuelta() == "si") {
+                $importe = (($this->getImporte() * 100)/50)+($this->getImporte());
+                $this->setImporte($importe);
+                $this->agregarPasajeros($pasajero); 
+            } else {
+                $importe = $this->getImporte();
+                $this->agregarPasajeros($pasajero);
+            }
+
+            return $importe;    
     }
     /**
      * funcion para devolver el string concatenado del responsable
@@ -231,4 +294,3 @@ class Viaje
 
     }
 }
-?>

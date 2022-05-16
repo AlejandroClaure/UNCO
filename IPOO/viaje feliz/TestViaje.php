@@ -2,7 +2,9 @@
 include "Viaje.php";
 include "ResponsableV.php";
 include "Pasajero.php";
-$viaje = new Viaje(235, "SanMartin", 20);
+include "Aereos.php";
+include "Terrestres.php";
+$viaje = new Viaje(235, "SanMartin", 20, 600, "si", "si");
 echo "ingrese el nombre del responsable del viaje: ";
 $nombre = strtoupper(trim(fgets(STDIN)));
 echo "ingrese el apellido del responsable del viaje: ";
@@ -29,7 +31,8 @@ if ($cambio == "SI" || $cambio == "NO") {
         echo "6) Borrar datos de un Pasajero\n";
         echo "7) Cambiar datos del Responsable\n";
         echo "8) Mostrar datos\n";
-        echo "9) salir.\n";
+        echo "9) Vender Pasaje\n";
+        echo "10) salir.\n";
         $opcion = trim(fgets(STDIN));
 
         switch ($opcion) {
@@ -162,6 +165,24 @@ if ($cambio == "SI" || $cambio == "NO") {
                 break;
 
             case "9":
+                echo "ingrese el nombre del nuevo pasajero: \n";
+                $nombre = trim(fgets(STDIN));
+                echo "ingrese el apellido del nuevo pasajero: \n";
+                $apellido = trim(fgets(STDIN));
+                echo "ingrese el documento del nuevo pasajero: \n";
+                $documento = trim(fgets(STDIN));
+                echo "ingrese el telefono del nuevo pasajero: \n";
+                $telefono = trim(fgets(STDIN));
+                if ($viaje->verificarDni($documento)) {
+                    echo "el documento del usuario ya existe. Intentelo de nuevo. \n";
+                } else if($viaje->hayPasajesDisponible()) {
+                    $pasajero = new Pasajero($nombre, $apellido, $documento, $telefono);
+                    echo "El importe del viaje es de: $".$viaje->venderPasaje($pasajero)."\n";
+                }else{
+                    echo "no hay pasajes disponibles. \n";
+                }
+
+            case "10":
                 $cambio = "sale del programa.";
                 break;
             default:
